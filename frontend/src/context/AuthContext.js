@@ -56,31 +56,42 @@ export const AuthProvider = ({ children }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ refresh: authTokens.refresh }),
+      body: JSON.stringify({ refresh: authTokens?.refresh }),
     });
     let data = await response.json();
     if (response.status === 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
+      // console.log("respsone after refresh:", JSON.stringify(data));
     } else {
       logOutUser();
+    }
+    if (loading) {
+      setLoading(false);
     }
   };
   let contextData = {
     user: user,
+    authTokens: authTokens,
     loginUser: loginUser,
     logOutUser: logOutUser,
   };
   useEffect(() => {
-    let interval=setInterval(() => {
+    if (loading) {
+      updateToken();
+    }
+    let fourMinutes = 1000 * 60 * 4;
+    let interval = setInterval(() => {
       if (authTokens) {
         updateToken();
       }
-    }, 2000);
+    }, fourMinutes);
     return () => clearInterval(interval);
   }, [authTokens, loading]);
   return (
-    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextData}>
+      {loading ? null : children}
+    </AuthContext.Provider>
   );
 };
