@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import PrivateRoute from "./utility/PrivateRoute";
+import Navigation from "./components/Navigation";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
     <div className="App">
       <Router>
         <AuthProvider>
+        <Navigation/>
           <Routes>
             <Route element={<PrivateRoute />}>
               <Route element={<Home />} path="/" exact />

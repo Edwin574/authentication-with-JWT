@@ -1,16 +1,15 @@
 import React, { useContext } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 const Navigation = () => {
-  let {username}=useContext(AuthContext)
+  let { user,logOutUser } = useContext(AuthContext);
 
   return (
     <div>
       <Link to="/">Home</Link>
       <span> | </span>
-      <Link to="/login">Login</Link>
-
-    
+      {user ? <p onClick={logOutUser}>Logout</p> : <Link to="/login">Login</Link>}
+      {user && <p> Hello {user.username}</p>}
     </div>
   );
 };
